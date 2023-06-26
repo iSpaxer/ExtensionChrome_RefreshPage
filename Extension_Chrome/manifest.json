@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "UFK_Refresh_Page",
+    "description": "Updating a specific page with timing selection",
+    "version": "0.1",
+    "author": "Alexandr_Sybachin",
+    "action": {
+        "default_popup": "html/popup.html",
+        "default_icon": "icons/icon-32.png"
+    }
+
+
+}
