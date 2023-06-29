@@ -3,9 +3,9 @@
 chrome.runtime.onInstalled.addListener(async () => {
     let url = chrome.runtime.getURL("html/hello.html");
     let tab = await chrome.tabs.create({ url });
+
     chrome.storage.sync.get(['showClock'], (result) => {
       if (result.showClock) {
-        //chrome.action.setBadgeText({ text: 'ON' });
         chrome.action.setIcon({
           path: {
               "32": "/icons/iconActive-32.png"
@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(async () => {
         })
       }
     });
-  
+
     chrome.storage.sync.get(['timer'], (result) => {
       console.log('result', result)
       if (!result.timer) {
@@ -21,6 +21,33 @@ chrome.runtime.onInstalled.addListener(async () => {
       }
     });
   });
+
+/*  Тут всё почти готово*/
+// chrome.tabs.onUpdated.addListener((tabId, tab) => {
+  
+//   let allURL = undefined;
+//   chrome.storage.sync.get(["ignoging"], (result) => {
+//     allURL = result.ignoging;
+//     //document.querySelector('.out').innerHTML = allURL + " <-"
+//   });
+//   let currentURL = undefined;
+//   chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+//     currentURL = tabs[0].url
+//   });
+
+//   ch = currentURL == allURL
+//   //console.log(tab.url + " " + tab.url.includes(allURL))
+//   if (ch) {
+//     chrome.action.setIcon({
+//       path: {
+//         "32" : "/icons/iconNoIncluded-32.png"
+//       }
+//     })
+//   }
+
+// });
+
+
 
   // Обработчик горячих клавишей
 //   chrome.commands.onCommand.addListener( (command) => {

@@ -1,0 +1,136 @@
+const helpButton = document.querySelector(".help-page");
+if (helpButton) {
+  helpButton.addEventListener("click", (e) => {
+    const url = chrome.runtime.getURL("/html/hello.html");
+    chrome.tabs.create({ url });
+    window.close();
+  });
+}
+
+let allURL = undefined;
+
+chrome.storage.sync.get(["ignoging"], (result) => {
+  allURL = result.ignoging;
+  //document.querySelector('.out').innerHTML = allURL + " <-"
+});
+
+let currentURL = undefined;
+chrome.storage.sync.get(["showDisable"], (tabs) => {
+  currentURL = tabs[0].url;
+});
+
+const clockCheckbox = document.querySelector(".clock-ckeckbox");
+
+chrome.storage.sync.get(["showClock"], (result) => {
+  clockCheckbox.checked = result.showClock;
+  if (result.showClock && (allURL != currentURL)) {
+    chrome.action.setIcon({
+      path: {
+          "32": "/icons/iconActive-32.png"
+      }
+    })
+  }
+});
+
+
+const inputDisable = document.querySelector(".disable-ckeckbox");
+console.log(inputDisable);
+
+chrome.storage.sync.get(["showDisable"], (result) => {
+  inputDisable.checked = result.showDisable;
+
+  document.querySelector('.out').innerHTML = currentURL + " <- " + allURL + "</p> 11"
+  if (result.showDisable && currentURL == allURL){
+    chrome.action.setIcon({
+      path: {
+          "32": "/icons/iconNoActive-32.png"
+      }
+    })
+  }
+});
+
+if (inputDisable) {
+  inputDisable.addEventListener("click", async (e) => {
+    const checkedDis = e.target.checked;
+
+    console.log("click-disable");
+    console.log(checkedDis + " disable");
+    
+    document.querySelector('.out').innerHTML = currentURL
+    chrome.storage.sync.set({ showDisable: checkedDis });
+    chrome.storage.sync.set({ ignoging: currentURL });
+    
+  }
+)}
+
+
+if (clockCheckbox) {
+    clockCheckbox.addEventListener("click", async (e) => {
+      const checked = e.target.checked;
+      console.log(checked);
+      //chrome.action.setBadgeText({ text: checked ? "ON" : "" });
+      chrome.action.setIcon({
+        path: {
+            "32" : checked ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+        }
+      })
+      //chrome.alarms.create({delayInMinutes: minutes});
+      chrome.storage.sync.set({ showClock: checked });
+    });
+} 
+
+const inputAlert = document.querySelector(".input-alert");
+const buttonAlert = document.querySelector(".alert-button");
+
+console.log(buttonAlert);
+
+if (buttonAlert) {
+  buttonAlert.addEventListener("click", async (e) => {
+    console.log("click");
+    const sec = parseFloat(inputAlert.value);
+    chrome.storage.sync.set({ timer: sec });
+    //chrome.alarms.create({ delayInSec: sec });
+    if(sec >= 5)
+      window.close();
+    else {
+      chrome.storage.sync.set({ timer: 5 });
+    }
+  });
+
+  chrome.storage.sync.get(["timer"], (result) => {
+    inputAlert.value = result.timer || 5;
+  });
+}
+
+
+
+
+//   if (clockCheckbox) {
+//     clockCheckbox.addEventListener("click", async (e) => {
+//       const checked = e.target.checked;
+//       console.log(checked);
+//       //chrome.action.setBadgeText({ text: checked ? "ON" : "" });
+//       chrome.action.setIcon({
+//         path: {
+//             "32" : checked ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+//         }
+//       })
+//       //chrome.alarms.create({delayInMinutes: minutes});
+//       chrome.storage.sync.set({ showClock: checked });
+//     });
+// }
+
+chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    let url = tabs[0].url
+});
+
+
+
+
+
+
+
+
+
+
+

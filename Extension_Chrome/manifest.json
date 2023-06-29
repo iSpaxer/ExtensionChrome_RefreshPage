@@ -6,10 +6,10 @@
     "author": "Alexandr_Sybachin",
     "action": {
         "default_popup": "html/popup.html",
-        "default_icon": "icons/iconNoActive-32.png"
+        "default_icon": "/icons/iconNoIncluded-32.png"
     },
     "icons": {
-        "32": "icons/iconNoActive-32.png"
+        "32": "/icons/iconNoActive-32.png"
         
     },
     "content_scripts": [
@@ -26,7 +26,8 @@
         "service_worker": "js/background.js"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "tabs"
     ],
     "host_permissions": [
         "<all_urls>"

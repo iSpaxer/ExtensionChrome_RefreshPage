@@ -1,10 +1,17 @@
 let intervalId
 
+// chrome.storage.sync.get(["timer"], (result) => {
+//     inputAlert.value = result.timer || 5;
+// });
+
 const addClock = () => {
-    intervalId = setInterval(() => {
-        window.location.reload(1)
-    }, 5000)
+    chrome.storage.sync.get(["timer"], (result) => {
+        intervalId = setInterval(() => {
+            window.location.reload(1)
+        }, (result.timer * 1000) )
+    });
 }
+    
 
 
 chrome.storage.sync.get(['showClock'], (result) => {
@@ -31,3 +38,4 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         }
     }
 });
+
