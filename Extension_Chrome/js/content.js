@@ -14,8 +14,8 @@ const addClock = () => {
     
 
 
-chrome.storage.sync.get(['showClock'], (result) => {
-    if (result.showClock) {
+chrome.storage.sync.get(['onAllRefresh'], (result) => {
+    if (result.onAllRefresh) {
         addClock()
         //setTimeout
     }
@@ -30,8 +30,8 @@ const removeClock = () => {
 }
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (changes?.showClock) {
-        if (changes.showClock.newValue) {
+    if (changes?.onAllRefresh) {
+        if (changes.onAllRefresh.newValue) {
             addClock
         } else {
             removeClock

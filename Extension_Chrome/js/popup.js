@@ -12,8 +12,8 @@ if (helpButton) {
 
 // получение всех URL
 let allURL = undefined;
-chrome.storage.sync.get(["ignoging"], (result) => {
-  allURL = result.ignoging;
+chrome.storage.sync.get(["ignorAllURL"], (result) => {
+  allURL = result.ignorAllURL;
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });
 
@@ -23,36 +23,85 @@ chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
   currentURL = tabs[0].url
 });
 
+
 // кнопка галочка для "авто-рефреш всех страниц"
-const chekMark = [false, false];
 const clockCheckbox = document.querySelector(".clock-ckeckbox");
-// считываем нажата ли кнопка
-chrome.storage.sync.get(["showClock"], (result) => {
-  clockCheckbox.checked = result.showClock;
-  if (result.showClock) {
-    chrome.action.setIcon({
-      path: {
-          "32": "/icons/iconActive-32.png"
-      }
-    })
-  }
+
+// считываем нажата ли кнопка из локального хранилища
+chrome.storage.sync.get(["onAllRefresh"], (result) => {
+  clockCheckbox.checked = result.onAllRefresh;
+  // if (result.onAllRefresh) {
+  //   chrome.action.setIcon({
+  //     path: {
+  //         "32": "/icons/iconActive-32.png"
+  //     }
+  //   })
+  // }
 });
+
+// кнопка галочка, для "откл рефреш данной страницы"
+const markDisable = document.querySelector(".disable-ckeckbox");
+console.log(markDisable);
+
+// считываем все сайты, которые мы игнорим и если url сайта совпал с игнорируемыми, то галка включена
+chrome.storage.sync.get(["ignorAllURL", "offCurrentRefresh"], (result) => {
+
+  if (result.ignorAllURL == currentURL) {
+    result.offCurrentRefresh = true;
+    markDisable.checked = true;
+  } else {
+    result.offCurrentRefresh = false;
+    markDisable.checked = false;
+  }
+
+  // document.querySelector('.out').innerHTML = result.ignorAllURL +"</p>" + currentURL + 
+  // "</p> галка на откл этой страницы " + result.offCurrentRefresh;
+})
 
 // если кнопка "галочка" считана, то создаём ивент на "клик", 
 if (clockCheckbox) {
-    clockCheckbox.addEventListener("click", async (e) => {
-      chekMark[0] = e.target.checked;
-      chrome.storage.sync.set({ showClock: chekMark[0] });
-      // const checked = e.target.checked;
-      // console.log(checked);
-      // chrome.action.setIcon({
-      //   path: {
-      //       "32" : checked ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
-      //   }
-      // })
-      // chrome.storage.sync.set({ showClock: checked });
-    });
+
+  // срабатывает только при нажатии
+  clockCheckbox.addEventListener("click", async (e) => {
+    //chekMark[0] = e.target.checked;
+    //document.querySelector('.out').innerHTML = chekMark[0];
+    chrome.storage.sync.set({ onAllRefresh: e.target.checked });
+  });
 } 
+
+// если нажата "галочка" отключения этого сайта из автообновления
+if (markDisable) {
+  // срабатывает только при нажатии  
+  markDisable.addEventListener("click", async (e) => {
+
+    chrome.storage.sync.set({ ignorAllURL : currentURL })
+    chrome.storage.sync.set({ offCurrentRefresh : e.target.checked })
+    
+  });
+}
+
+const applyButton = document.querySelector(".apply-button");
+
+if (applyButton) {
+  
+  applyButton.addEventListener("click", async (e) => {
+    
+    chrome.storage.sync.get(['onAllRefresh', 'offCurrentRefresh', 'test'], (result) => {
+      document.querySelector('.out').innerHTML = result.test;
+      // если работа с галками
+      chrome.action.setIcon({
+        path: {
+            "32" : (result.onAllRefresh && !result.offCurrentRefresh) ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+        }
+      })
+    })
+    
+   // window.close();
+  });
+}
+
+
+
 
 // кнопка вывода секунд
 const inputAlert = document.querySelector(".input-alert");
@@ -61,7 +110,6 @@ const buttonAlert = document.querySelector(".alert-button");
 
 console.log(buttonAlert);
 
-//document.querySelector('.out').innerHTML = buttonAlert;
 
 // если кнопка ОК "связана", создаём для неё ивент на "клик"
 if (buttonAlert) {
@@ -82,92 +130,6 @@ if (buttonAlert) {
   });
 }
 
-// кнопка галочка, для "откл рефреш данной страницы"
-const inputDisable = document.querySelector(".disable-ckeckbox");
-console.log(inputDisable);
-
-chrome.storage.sync.get(["showDisable"], (result) => {
-  if (result.showDisable) {
-    chrome.action.setIcon({
-      path: {
-          "32": "/icons/NoActive-32.png" //icons/iconNoIncluded-32.png"
-      }
-    })
-  }
-});
-
-// chrome.storage.sync.get(["showDisable"], (result) => {
-
-//   checkMathURL = currentURL == allURL && (currentURL != undefined);
-
-//   // если юрл совпали
-//   if (checkMathURL) {
-//     inputDisable.checked = true;
-//     document.querySelector('.out').innerHTML = currentURL + "------" + allURL;
-//     chrome.action.setIcon({
-//       path: {
-//         "32" : "/icons/iconNoIncluded-32.png"
-//       }
-//     })
-//   } else { 
-//     inputDisable.checked = false;
-//   }
-//     // обработка клика 
-//   inputDisable.addEventListener("click", async (e) => {
-//     const checkedDis = e.target.checked;
-
-//     console.log("click-disable");
-//     console.log(checkedDis + " disable");
-    
-    
-//     chrome.storage.sync.set({ showDisable: checkedDis });
-//     chrome.storage.sync.set({ ignoging: currentURL });
-//   })
-
-// });
-
-// document.querySelector('.out').innerHTML = currentURL + "------" + allURL;
-// checkMathURL = currentURL == allURL && (currentURL != undefined);
-// if (checkMathURL) {
-//   inputDisable.checked = true;
-//   inputDisable.addEventListener("click", async (e) => {
-//     const checkedDis = e.target.checked;
-
-//     console.log("click-disable");
-//     console.log(checkedDis + " disable");
-    
-//     document.querySelector('.out').innerHTML = "que";
-//     chrome.storage.sync.set({ showDisable: checkedDis });
-//     chrome.storage.sync.set({ ignoging: currentURL });
-
-
-//   }
-// )} else { 
-//   inputDisable.checked = false;
-// }
-
-// chrome.action.setIcon({
-//   path: {
-//     "32" : checkMathURL ? "/icons/iconNoIncluded-32.png" : "/icons/iconActive-32.png"
-//   }
-// })
-
-
-
-//   if (clockCheckbox) {
-//     clockCheckbox.addEventListener("click", async (e) => {
-//       const checked = e.target.checked;
-//       console.log(checked);
-//       //chrome.action.setBadgeText({ text: checked ? "ON" : "" });
-//       chrome.action.setIcon({
-//         path: {
-//             "32" : checked ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
-//         }
-//       })
-//       //chrome.alarms.create({delayInMinutes: minutes});
-//       chrome.storage.sync.set({ showClock: checked });
-//     });
-// }
 
 
 
