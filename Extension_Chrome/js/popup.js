@@ -10,10 +10,14 @@ if (helpButton) {
   });
 }
 
-// получение всех URL
-let allURL = undefined;
+// получение всех URL, распарсиваем массив, полученный из локал сторадж
+let ignorAllURL = [];
 chrome.storage.sync.get(["ignorAllURL"], (result) => {
-  allURL = result.ignorAllURL;
+  if (result.ignorAllURL != undefined)
+    ignorAllURL = JSON.parse(result.ignorAllURL)
+
+  document.querySelector('.out').innerHTML = ignorAllURL;
+    /*allURL = result.ignorAllURL;*/
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });
 
@@ -44,9 +48,18 @@ const markDisable = document.querySelector(".disable-ckeckbox");
 console.log(markDisable);
 
 // считываем все сайты, которые мы игнорим и если url сайта совпал с игнорируемыми, то галка включена
-chrome.storage.sync.get(["ignorAllURL", "offCurrentRefresh"], (result) => {
+chrome.storage.sync.get(["offCurrentRefresh"], (result) => {
+  
+  checkOnMatch = false;
+  if(ignorAllURL != []) {
+    ignorAllURL.forEach(url => {
+      if ( url == currentURL ){
+        checkOnMatch = true;
+      };
+    });
+  }
 
-  if (result.ignorAllURL == currentURL) {
+  if (checkOnMatch) {
     result.offCurrentRefresh = true;
     markDisable.checked = true;
   } else {
@@ -58,7 +71,7 @@ chrome.storage.sync.get(["ignorAllURL", "offCurrentRefresh"], (result) => {
   // "</p> галка на откл этой страницы " + result.offCurrentRefresh;
 })
 
-// если кнопка "галочка" считана, то создаём ивент на "клик", 
+// если "галочка" (кнопка автообн страниц) считана, то создаём ивент на "клик", 
 if (clockCheckbox) {
 
   // срабатывает только при нажатии
@@ -73,8 +86,14 @@ if (clockCheckbox) {
 if (markDisable) {
   // срабатывает только при нажатии  
   markDisable.addEventListener("click", async (e) => {
-
-    chrome.storage.sync.set({ ignorAllURL : currentURL })
+    // если галка включена и url сайта ещё не добавлен, то мы добавляем сайт в игнор
+    // в противном случае, мы удаляем его из игнорируемых
+    //________________________НЕОБХОДИМО ДОБАВИТЬ УДАЛЕНИЕ САЙТА_________________________________
+    if (e.target.checked && !(ignorAllURL.includes(currentURL)) ) {
+      ignorAllURL.push(currentURL);
+    }
+    //document.querySelector('.out').innerHTML = e.target.checked;
+    chrome.storage.sync.set({ ignorAllURL : JSON.stringify(ignorAllURL) })
     chrome.storage.sync.set({ offCurrentRefresh : e.target.checked })
     
   });
@@ -82,12 +101,12 @@ if (markDisable) {
 
 const applyButton = document.querySelector(".apply-button");
 
+//____________________________________ДОБАВИТЬ_АВТООБНОВЛЕНИЕ_СРАЗУ_ПОСЛЕ_НАЖАТИЯ____________________
 if (applyButton) {
-  
   applyButton.addEventListener("click", async (e) => {
     
-    chrome.storage.sync.get(['onAllRefresh', 'offCurrentRefresh', 'test'], (result) => {
-      document.querySelector('.out').innerHTML = result.test;
+    chrome.storage.sync.get(['onAllRefresh', 'offCurrentRefresh'], (result) => {
+      //document.querySelector('.out').innerHTML = result.onAllRefresh + " " + result.offCurrentRefresh;
       // если работа с галками
       chrome.action.setIcon({
         path: {
@@ -95,7 +114,7 @@ if (applyButton) {
         }
       })
     })
-    
+    //chrome.storage.sync.clear();
    // window.close();
   });
 }
@@ -131,6 +150,20 @@ if (buttonAlert) {
 }
 
 
+const resetButton = document.querySelector(".reset-storage-button");
+
+if (resetButton) {
+  resetButton.addEventListener("click", async (e) => {
+    chrome.storage.local.remove("ignorAllURL", function() {
+      console.log("Key 'ignorAllURL' removed from local storage");
+    });
+    //chrome.storage.sync.clear();
+  })
+  
+}
+
+
+//document.querySelector('.out').innerHTML = result.test;
 
 
 

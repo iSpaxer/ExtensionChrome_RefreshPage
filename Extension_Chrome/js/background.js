@@ -4,15 +4,21 @@ chrome.runtime.onInstalled.addListener(async () => {
     let url = chrome.runtime.getURL("html/hello.html");
     let tab = await chrome.tabs.create({ url });
 
-    chrome.storage.sync.get(['onAllRefresh'], (result) => {
-      if (result.onAllRefresh) {
-        chrome.action.setIcon({
-          path: {
-              "32": "/icons/iconActive-32.png"
-          }
-        })
-      }
-    });
+    chrome.storage.sync.set({ 
+        onAllRefresh : false
+    })
+    /*
+    chrome.storage.sync.set({ offCurrentRefresh : e.target.checked })
+    */
+    // chrome.storage.sync.get(['onAllRefresh'], (result) => {
+    //   if (result.onAllRefresh) {
+    //     chrome.action.setIcon({
+    //       path: {
+    //           "32": "/icons/iconActive-32.png"
+    //       }
+    //     })
+    //   }
+    // });
 
     chrome.storage.sync.get(['timer'], (result) => {
       console.log('result', result)
@@ -25,38 +31,26 @@ chrome.runtime.onInstalled.addListener(async () => {
   let boolIcon = false;
 
   //chrome.tabs.onUpdated.addListener((tabId, tab) => { 
-chrome.tabs.onActivated.addListener( ()=> {
-  chrome.storage.sync.get(["ignorAllURL", "onAllRefresh"], (result) => { 
+//____________________________________________
+// chrome.tabs.onActivated.addListener( ()=> {
+//   chrome.storage.sync.get(["ignorAllURL", "onAllRefresh"], (result) => { 
     
-    let currentURL = undefined;
-    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-      //currentURL = 
-      boolIcon = !(result.ignorAllURL == tabs[0].url) && result.onAllRefresh;
+//     let currentURL = undefined;
+//     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+//       //currentURL = 
+//       boolIcon = !(result.ignorAllURL == tabs[0].url) && result.onAllRefresh;
     
-      chrome.storage.sync.set({ test : tabs[0].url })
+//       chrome.storage.sync.set({ test : tabs[0].url })
   
-      chrome.action.setIcon({
-        path: {
-            "32" : boolIcon ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
-        }
-      })
-    });
-    
-    // если ЮРЛы совпали => то на данной странице нужно отключить
-    // boolIcon = !(result.ignorAllURL == currentURL) && result.onAllRefresh;
-    
-    // chrome.storage.sync.set({ test : currentURL })
-
-    // chrome.action.setIcon({
-    //   path: {
-    //       "32" : boolIcon ? "/icons/iconActive-32.png" : "/icons/iconNoActive-32.png"
-    //   }
-    // })
-    
-  })
-  //boolIcon = !boolIcon;
-})
-
+//       chrome.action.setIcon({
+//         path: {
+//             "32" : boolIcon ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+//         }
+//       })
+//     });
+//   })
+// })
+//___________________________________________
 /*  Тут всё почти готово*/
 // chrome.tabs.onUpdated.addListener((tabId, tab) => {
   
