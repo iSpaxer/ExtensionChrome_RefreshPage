@@ -32,24 +32,36 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   //chrome.tabs.onUpdated.addListener((tabId, tab) => { 
 //____________________________________________
-// chrome.tabs.onActivated.addListener( ()=> {
-//   chrome.storage.sync.get(["ignorAllURL", "onAllRefresh"], (result) => { 
+// из-за неудаления элементов из массива замена иконок происходит некорректно
+chrome.tabs.onActivated.addListener( ()=> {
+  chrome.storage.sync.get(["ignorAllURL", "onAllRefresh"], (result) => { 
     
-//     let currentURL = undefined;
-//     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-//       //currentURL = 
-//       boolIcon = !(result.ignorAllURL == tabs[0].url) && result.onAllRefresh;
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+      
+      let ignorAllURL = [];
+      if (result.ignorAllURL != undefined)
+        ignorAllURL = JSON.parse(result.ignorAllURL);
+      
+      checkOnMatch = false;
+      ignorAllURL.forEach(url => {
+        if ( url == tabs[0].url ){
+          checkOnMatch = true;
+        };
+      });
+      
+      // если сайт не в игноре и включена галочка
+      boolIcon = !(checkOnMatch) && result.onAllRefresh;
     
-//       chrome.storage.sync.set({ test : tabs[0].url })
+      chrome.storage.sync.set({ test : tabs[0].url })
   
-//       chrome.action.setIcon({
-//         path: {
-//             "32" : boolIcon ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
-//         }
-//       })
-//     });
-//   })
-// })
+      chrome.action.setIcon({
+        path: {
+            "32" : boolIcon ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+        }
+      })
+    });
+  })
+})
 //___________________________________________
 /*  Тут всё почти готово*/
 // chrome.tabs.onUpdated.addListener((tabId, tab) => {

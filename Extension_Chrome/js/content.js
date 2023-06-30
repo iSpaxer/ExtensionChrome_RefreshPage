@@ -18,7 +18,7 @@ chrome.storage.sync.get(['onAllRefresh'], (result) => {
     if (result.onAllRefresh) {
         addClock()
         //setTimeout
-    }
+    } 
 });
 
 const removeClock = () => {
@@ -29,12 +29,15 @@ const removeClock = () => {
     }
 }
 
+// отслеживание изменение хранилища 
 chrome.storage.onChanged.addListener((changes, namespace) => {
+    // на какое конкретное изменение был вызван обработчик
     if (changes?.onAllRefresh) {
+        // если изменилась переменная onAllRefresh
         if (changes.onAllRefresh.newValue) {
-            addClock
+            addClock()
         } else {
-            removeClock
+            removeClock()
         }
     }
 });

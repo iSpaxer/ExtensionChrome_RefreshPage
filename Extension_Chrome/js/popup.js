@@ -12,7 +12,7 @@ if (helpButton) {
 
 // получение всех URL, распарсиваем массив, полученный из локал сторадж
 let ignorAllURL = [];
-chrome.storage.sync.get(["ignorAllURL"], (result) => {
+chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
   if (result.ignorAllURL != undefined)
     ignorAllURL = JSON.parse(result.ignorAllURL)
 
@@ -51,13 +51,11 @@ console.log(markDisable);
 chrome.storage.sync.get(["offCurrentRefresh"], (result) => {
   
   checkOnMatch = false;
-  if(ignorAllURL != []) {
-    ignorAllURL.forEach(url => {
-      if ( url == currentURL ){
-        checkOnMatch = true;
-      };
-    });
-  }
+  ignorAllURL.forEach(url => {
+    if ( url == currentURL ){
+      checkOnMatch = true;
+    };
+  });
 
   if (checkOnMatch) {
     result.offCurrentRefresh = true;
@@ -89,8 +87,11 @@ if (markDisable) {
     // если галка включена и url сайта ещё не добавлен, то мы добавляем сайт в игнор
     // в противном случае, мы удаляем его из игнорируемых
     //________________________НЕОБХОДИМО ДОБАВИТЬ УДАЛЕНИЕ САЙТА_________________________________
-    if (e.target.checked && !(ignorAllURL.includes(currentURL)) ) {
+    addedUrl = ignorAllURL.includes(currentURL)     // сайт в игноре? true : false
+    if (e.target.checked && !(addedUrl) ) {
       ignorAllURL.push(currentURL);
+    } if (!e.target.checked && addedUrl) {
+      ignorAllURL.splice(ignorAllURL.lastIndexOf(currentURL));
     }
     //document.querySelector('.out').innerHTML = e.target.checked;
     chrome.storage.sync.set({ ignorAllURL : JSON.stringify(ignorAllURL) })
@@ -157,7 +158,7 @@ if (resetButton) {
     chrome.storage.local.remove("ignorAllURL", function() {
       console.log("Key 'ignorAllURL' removed from local storage");
     });
-    //chrome.storage.sync.clear();
+    chrome.storage.sync.clear();
   })
   
 }
