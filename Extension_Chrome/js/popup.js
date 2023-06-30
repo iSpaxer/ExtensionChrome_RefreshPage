@@ -16,7 +16,7 @@ chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
   if (result.ignorAllURL != undefined)
     ignorAllURL = JSON.parse(result.ignorAllURL)
 
-  document.querySelector('.out').innerHTML = ignorAllURL;
+                                                                    document.querySelector('.out').innerHTML = result.test + " hehe " + ignorAllURL;
     /*allURL = result.ignorAllURL;*/
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });

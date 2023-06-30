@@ -14,11 +14,13 @@ const addClock = () => {
     
 
 
-chrome.storage.sync.get(['onAllRefresh'], (result) => {
-    if (result.onAllRefresh) {
-        addClock()
+chrome.storage.sync.get(['offCurrentRefresh'], (result) => {
+    if (result.offCurrentRefresh) {
+        addClock();
         //setTimeout
-    } 
+    } else {
+        removeClock();
+    }
 });
 
 const removeClock = () => {
@@ -32,13 +34,39 @@ const removeClock = () => {
 // отслеживание изменение хранилища 
 chrome.storage.onChanged.addListener((changes, namespace) => {
     // на какое конкретное изменение был вызван обработчик
-    if (changes?.onAllRefresh) {
-        // если изменилась переменная onAllRefresh
-        if (changes.onAllRefresh.newValue) {
-            addClock()
-        } else {
-            removeClock()
+    chrome.storage.sync.set({ test : "asd" })
+    if (changes?.offCurrentRefresh) {
+        // если добавился сайт в игнор
+        
+        if (changes.offCurrentRefresh.newValue) {
+            // получаем исходный юрл
+            chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+                   
+                let ignorAllURL = [];
+                chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
+                    if (result.ignorAllURL != undefined)
+                        ignorAllURL = JSON.parse(result.ignorAllURL)
+                });
+                checkOnMatch = false;
+                ignorAllURL.forEach(url => {
+                if ( url == tabs[0].url ){
+                    checkOnMatch = true;
+                };
+                });
+                
+                // если сайт не в игноре и включена галочка
+                //boolIcon = !(checkOnMatch) && result.onAllRefresh;
+
+                chrome.storage.sync.set({ test : checkOnMatch})
+
+                if (checkOnMatch) {
+                    addClock()
+                } else {
+                    removeClock()
+                }
+            });
         }
+ 
     }
 });
 
