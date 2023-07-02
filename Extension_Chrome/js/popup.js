@@ -16,7 +16,7 @@ chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
   if (result.ignorAllURL != undefined)
     ignorAllURL = JSON.parse(result.ignorAllURL)
 
-                                                                    document.querySelector('.out').innerHTML = result.test + " hehe " + ignorAllURL;
+                                  document.querySelector('.out').innerHTML = result.test + " __</p> " + ignorAllURL;
     /*allURL = result.ignorAllURL;*/
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });
@@ -106,12 +106,12 @@ const applyButton = document.querySelector(".apply-button");
 if (applyButton) {
   applyButton.addEventListener("click", async (e) => {
     
-    chrome.storage.sync.get(['onAllRefresh', 'offCurrentRefresh'], (result) => {
+    chrome.storage.sync.get(['offCurrentRefresh'], (result) => {
       //document.querySelector('.out').innerHTML = result.onAllRefresh + " " + result.offCurrentRefresh;
       // если работа с галками
       chrome.action.setIcon({
         path: {
-            "32" : (result.onAllRefresh && !result.offCurrentRefresh) ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
+            "32" : result.offCurrentRefresh ? "/icons/iconActive-32.png" : "/icons/iconNoIncluded-32.png"
         }
       })
     })
@@ -162,6 +162,7 @@ if (resetButton) {
   })
   
 }
+
 
 
 //document.querySelector('.out').innerHTML = result.test;
