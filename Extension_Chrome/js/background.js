@@ -20,6 +20,9 @@ chrome.runtime.onInstalled.addListener(async () => {
     //   }
     // });
 
+    let intervalId = new Map();
+    chrome.storage.sync.set({ intervalIdMap : JSON.stringify(Object.fromEntries(intervalId)) });
+
     chrome.storage.sync.get(['timer'], (result) => {
       console.log('result', result)
       if (!result.timer) {
@@ -39,11 +42,11 @@ chrome.runtime.onInstalled.addListener(async () => {
 */
 
 chrome.tabs.onActivated.addListener( ()=> {
-  chrome.storage.sync.get(["ignorAllURL", "onAllRefresh"], (result) => { 
+  chrome.storage.sync.get(["ignorAllURL"], (result) => { 
     
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
       
-      chrome.storage.sync.set({ curURL : tabs[0].url });
+      //chrome.storage.sync.set({ curURL : tabs[0].url });
 
       let ignorAllURL = [];
       if (result.ignorAllURL != undefined)

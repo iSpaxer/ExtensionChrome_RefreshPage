@@ -12,11 +12,15 @@ if (helpButton) {
 
 // получение всех URL, распарсиваем массив, полученный из локал сторадж
 let ignorAllURL = [];
-chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
+chrome.storage.sync.get(["ignorAllURL", "test", "intervalIdMap"], (result) => {
   if (result.ignorAllURL != undefined)
-    ignorAllURL = JSON.parse(result.ignorAllURL)
-
-                                  document.querySelector('.out').innerHTML = result.test + " __</p> " + ignorAllURL;
+    ignorAllURL = JSON.parse(result.ignorAllURL);
+    //noize = new Map(Object.entries (JSON.parse(result.intervalIdMap))); 
+    //let myMap = new Map(Object.entries(this.props.json));
+    //noize.set("key", "value");
+                                  document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
+                                  + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
+                                  + ignorAllURL;
     /*allURL = result.ignorAllURL;*/
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });
@@ -24,30 +28,32 @@ chrome.storage.sync.get(["ignorAllURL", "test"], (result) => {
 // получение URL сайта, где мы находимся
 let currentURL = undefined;
 chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-  currentURL = tabs[0].url
+  currentURL = tabs[0].url;
+  chrome.storage.sync.set({ curURL : tabs[0].url });
 });
 
 
-// кнопка галочка для "авто-рефреш всех страниц"
-const clockCheckbox = document.querySelector(".clock-ckeckbox");
+// // кнопка галочка для "авто-рефреш всех страниц"
+// const clockCheckbox = document.querySelector(".clock-ckeckbox");
 
-// считываем нажата ли кнопка из локального хранилища
-chrome.storage.sync.get(["onAllRefresh"], (result) => {
-  clockCheckbox.checked = result.onAllRefresh;
-  // if (result.onAllRefresh) {
-  //   chrome.action.setIcon({
-  //     path: {
-  //         "32": "/icons/iconActive-32.png"
-  //     }
-  //   })
-  // }
-});
+// // считываем нажата ли кнопка из локального хранилища
+// chrome.storage.sync.get(["onAllRefresh"], (result) => {
+//   clockCheckbox.checked = result.onAllRefresh;
+//   // if (result.onAllRefresh) {
+//   //   chrome.action.setIcon({
+//   //     path: {
+//   //         "32": "/icons/iconActive-32.png"
+//   //     }
+//   //   })
+//   // }
+// });
 
 // кнопка галочка, для "откл рефреш данной страницы"
 const markDisable = document.querySelector(".disable-ckeckbox");
 console.log(markDisable);
 
 // считываем все сайты, которые мы игнорим и если url сайта совпал с игнорируемыми, то галка включена
+// refresh
 chrome.storage.sync.get(["offCurrentRefresh"], (result) => {
   
   checkOnMatch = false;
@@ -69,16 +75,16 @@ chrome.storage.sync.get(["offCurrentRefresh"], (result) => {
   // "</p> галка на откл этой страницы " + result.offCurrentRefresh;
 })
 
-// если "галочка" (кнопка автообн страниц) считана, то создаём ивент на "клик", 
-if (clockCheckbox) {
+// // если "галочка" (кнопка автообн страниц) считана, то создаём ивент на "клик", 
+// if (clockCheckbox) {
 
-  // срабатывает только при нажатии
-  clockCheckbox.addEventListener("click", async (e) => {
-    //chekMark[0] = e.target.checked;
-    //document.querySelector('.out').innerHTML = chekMark[0];
-    chrome.storage.sync.set({ onAllRefresh: e.target.checked });
-  });
-} 
+//   // срабатывает только при нажатии
+//   clockCheckbox.addEventListener("click", async (e) => {
+//     //chekMark[0] = e.target.checked;
+//     //document.querySelector('.out').innerHTML = chekMark[0];
+//     chrome.storage.sync.set({ onAllRefresh: e.target.checked });
+//   });
+// } 
 
 // если нажата "галочка" отключения этого сайта из автообновления
 if (markDisable) {
@@ -86,8 +92,7 @@ if (markDisable) {
   markDisable.addEventListener("click", async (e) => {
     // если галка включена и url сайта ещё не добавлен, то мы добавляем сайт в игнор
     // в противном случае, мы удаляем его из игнорируемых
-    //________________________НЕОБХОДИМО ДОБАВИТЬ УДАЛЕНИЕ САЙТА_________________________________
-    addedUrl = ignorAllURL.includes(currentURL)     // сайт в игноре? true : false
+    addedUrl = ignorAllURL.includes(currentURL);     // сайт в игноре? true : false
     if (e.target.checked && !(addedUrl) ) {
       ignorAllURL.push(currentURL);
     } if (!e.target.checked && addedUrl) {
