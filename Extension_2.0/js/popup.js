@@ -44,7 +44,7 @@ if (markRefresh) {
         if (click && !(addedUrl) ) {
             allURL.push(currentURL);
         } if (!click && addedUrl) {
-            chrome.storage.sync.set({ test : currentURL + " " + allURL.lastIndexOf(currentURL)}); 
+            
             allURL.splice(allURL.lastIndexOf(currentURL), 1);
             chrome.storage.sync.set({ deleteURL : currentURL });
             
