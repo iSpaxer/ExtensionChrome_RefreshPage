@@ -13,10 +13,10 @@ chrome.storage.sync.get(["allURL", "test", "intervalIdMap", "deleteURL"], (resul
   if (result.allURL != undefined)
     allURL = JSON.parse(result.allURL);
 
-    document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
-        + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
-        + "allURL "+ allURL + "_</p>"
-        + "deleteURL " + result.deleteURL;
+    // document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
+    //     + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
+    //     + "allURL "+ allURL + "_</p>"
+    //     + "deleteURL " + result.deleteURL;
 });
 
 // кнопка галочка, "включения рефреш данной страницы"
@@ -85,7 +85,7 @@ if (buttonAlert) {
     const sec = parseFloat(inputAlert.value);
     chrome.storage.sync.set({ timer: sec });
     //chrome.alarms.create({ delayInSec: sec });
-    if(sec >= 5)
+    if (sec >= 5)
       window.close();
     else {
       chrome.storage.sync.set({ timer: 5 });
@@ -104,6 +104,11 @@ if (resetButton) {
   resetButton.addEventListener("click", async (e) => {
     chrome.storage.local.remove("allURL", function() {
       console.log("Key 'allURL' removed from local storage");
+    });
+    chrome.action.setIcon({
+      path: {
+          "32" : "/icons/iconNoActive-32.png"
+      }
     });
     chrome.storage.sync.clear();
   })

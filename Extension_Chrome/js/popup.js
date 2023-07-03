@@ -18,9 +18,9 @@ chrome.storage.sync.get(["ignorAllURL", "test", "intervalIdMap"], (result) => {
     //noize = new Map(Object.entries (JSON.parse(result.intervalIdMap))); 
     //let myMap = new Map(Object.entries(this.props.json));
     //noize.set("key", "value");
-                                  document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
-                                  + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
-                                  + ignorAllURL;
+                                  // document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
+                                  // + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
+                                  // + ignorAllURL;
     /*allURL = result.ignorAllURL;*/
   //document.querySelector('.out').innerHTML = allURL + " <-"
 });

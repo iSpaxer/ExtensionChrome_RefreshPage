@@ -1,15 +1,16 @@
 {
     "manifest_version": 3,
     "name": "UFK_Refresh_Page",
-    "description": "Updating a specific page with timing selection",
-    "version": "0.1.1",
+    "description": "Automatic page updates",
+    "version": "1.0.0",
     "author": "Alexandr_Sybachin",
     "action": {
         "default_popup": "html/popup.html",
         "default_icon": "/icons/iconNoActive-32.png"
     },
     "icons": {
-        "32": "/icons/iconActive-32.png"
+        "32": "/icons/iconMain-32.png",
+        "128": "/icons/iconMain2-128.png"
         
     },
     "content_scripts": [
