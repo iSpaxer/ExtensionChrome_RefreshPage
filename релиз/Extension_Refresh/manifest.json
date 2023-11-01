@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "UFK_Refresh_Page",
+    "description": "Automatic page updates",
+    "version": "1.0.0",
+    "author": "Alexandr_Sybachin",
+    "action": {
+        "default_popup": "html/popup.html",
+        "default_icon": "/icons/iconNoActive-32.png"
+    },
+    "icons": {
+        "32": "/icons/iconMain-32.png",
+        "128": "/icons/iconMain2-128.png"
+        
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "js/content.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "background": {
+        "service_worker": "js/background.js"
+    },
+    "permissions": [
+        "storage",
+        "tabs"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ]
+
+
+
+}

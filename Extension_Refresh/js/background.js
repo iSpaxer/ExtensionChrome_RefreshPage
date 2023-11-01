@@ -1,10 +1,13 @@
 // Обработчик первого запуска/нового обновления расширения 
 chrome.runtime.onInstalled.addListener(async () => {
-    let url = chrome.runtime.getURL("html/hello.html");
+    let url = chrome.runtime.getURL("html/settings.html");
     let tab = await chrome.tabs.create({ url });
 
     let intervalId = new Map();
     chrome.storage.sync.set({ intervalIdMap : JSON.stringify(Object.fromEntries(intervalId)) });
+
+    let clients = [];
+    chrome.storage.sync.set({ "clients" : clients });
 
     chrome.storage.sync.get(['timer'], (result) => {
         console.log('result', result)
@@ -26,6 +29,7 @@ chrome.tabs.onActivated.addListener( ()=> {
         if (result.allURL != undefined)
           allURL = JSON.parse(result.allURL);
         
+          
         // проверка на совпадение
         checkOnMatch = false;
         allURL.forEach(url => {

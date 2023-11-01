@@ -34,7 +34,7 @@
       padding: 10px 0;
     }
 
-    .clock-option, .refresh-page {
+    .clock-option, .refresh-page, .message-page {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -57,11 +57,15 @@
       <div class="col help-page">Открыть справку</div>
     </div>
     <div class="row">
-      <div class="col refresh-page"><span>Включить автообновление данной страницы</span>
+      <div class="col settings-page">Открыть настройки</div>
+    </div>
+    <div class="row">
+      <!-- подразумевает автообновление сайта и его парсинг -->
+      <div class="col refresh-page"><span>Включить уведомление о новом клиенте</span>
       <input type="checkbox" class="refresh-ckeckbox" /></div>
     </div>
     <div class="row">
-      <div class="col change-alert"><span>Установить время обновления (секунд >= 5):</span>
+      <div class="col change-alert"><span>Установить время обновления сайта (секунд >= 5):</span>
         <input type="number" class="input-alert" />
         <input type="button" class="alert-button" value="Ok" />
       </div>
@@ -69,11 +73,13 @@
     <div class="row">
       <div class="reset-localStorage">
         <input type="button" class="reset-storage-button" value="Отключить автообновление всех вкладок" />
+      </div>
     </div>
-    <!-- <div class="row">
+    <div class="row">
+    </p>
       <div class="col change-alert"><span>Тестовый вывод:</span>
       <div class="out"></div>
-      </p> -->
+      </p>
   <script src="/js/popup.js"></script>
 </body>
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Настройки</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ccc;
+    }
+    .content {
+      background-color: #fff;
+      padding: 50px;
+      border-radius: 20px;
+    }
+
+    .content h1{
+      text-align: center;
+    }
+    .content_w {
+      text-align: center;
+    }
+
+    .button-panel{
+      padding: 20px;
+      text-align: center;
+    }
+    .ok-button{
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="content">
+      <h1>Настройки</h1>
+
+      <div class="tgId">
+        <span>Введите телеграмм id: </span>
+        <div class="tgId-inputs">
+          <div class="tgId-input-0">
+            <input type="number" class="input-tgId-0" />
+            <input type="button" class="button-add-more-tgId" value="add more tg id" />
+          </div>
+        </div>
+        <div class="generalSetTgId">
+          <input type="button" id="saveTgId" class="save-tgId" value="save"/>
+          <input type="button" id="deleteLastTgId" class="delete-last-tgId" value="delete last" />
+        </div>
+      </div>
+      </p>
+
+      <div class="userId">
+        <span>Номера юзеров для фильтров: </span>
+        <div class="userId-inputs">
+          <div class="userId-input-0">
+            <input type="text" class="input-userId-0" />
+            <input type="button" class="button-add-more-userId" value="add more user id" />
+          </div>
+        </div>
+        <div class="generalSetUserId">
+          <input type="button" id="saveUserId" class="save-userId" value="save"/>
+          <input type="button" id="deleteLastUserId" class="delete-last-userId" value="delete last" />
+        </div>
+      </div>
+      </p> 
+      
+      <div class="selector">
+        <span>Input selector for search: </span>
+        <div class="selector-inputs">
+          <input type="text" class="input-selector-0" />
+        </div>
+        <input type="button" class="save-selector" value="save"/>
+      </p>
+
+      <!-- </div>
+      <div class="row">
+        <div class="reset-localStorage">
+          <input type="button" class="reset-storage-button" value="Отключить автообновление всех вкладок" />
+        </div>
+      </div> -->
+      
+      <div class="button-panel"><button class="ok-button">Принять и закрыть</button></div>
+    </div>
+  </div>
+  <script src="/js/settings.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+/** Нужно ли это? */
+body {
+	height: 100%;
+	width: 100%;
+	background-color: #fff;
+	line-height: 20px;
+	margin: 0;
+	}
+
+.cellTree {
+	max-height: 500px;
+	overflow: auto;
+	}
+
+.tabCnt {
+	height: 100%;
+	overflow: auto;
+	}
+
+.PropertyList {
+	width: 100%;
+	}
+
+.noHand td {
+	cursor: default;
+	}

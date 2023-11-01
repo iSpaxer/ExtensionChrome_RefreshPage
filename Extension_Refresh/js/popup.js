@@ -6,17 +6,32 @@ chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
 });
 console.log("получение URL сайта, где мы находимся" + currentURL);
 
+
+
 // получение всех URL, распарсиваем массив, полученный из локал сторадж
 let allURL = [];
-chrome.storage.sync.get(["allURL", "test", "intervalIdMap", "deleteURL"], (result) => {
+chrome.storage.sync.get(["allURL", "test", "intervalIdMap", "deleteURL", "clients", "tgId"], (result) => {
   
   if (result.allURL != undefined)
     allURL = JSON.parse(result.allURL);
 
-    // document.querySelector('.out').innerHTML = "test: " + result.test + " __</p>"
-    //     + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
-    //     + "allURL "+ allURL + "_</p>"
-    //     + "deleteURL " + result.deleteURL;
+    var a = new XMLSerializer();
+    html = a.serializeToString(document);
+
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    var links = doc.querySelectorAll("body");
+
+    let reg = new RegExp("U");
+    
+
+    document.querySelector('.out').innerHTML =  
+         "html: " + links.item(0).innerHTML.match(reg) + "</p>" +
+         "test: " + result.test + " __</p>" +
+         "clients " +  result.clients + 
+         "tgId " + result.tgId;
+   //     + "intervalIdMap!: " + result.intervalIdMap + "_</p>"
+   //     + "allURL "+ allURL + "_</p>"
+   //     + "deleteURL " + result.deleteURL;
 });
 
 // кнопка галочка, "включения рефреш данной страницы"
@@ -65,6 +80,18 @@ const helpButton = document.querySelector(".help-page");
 if (helpButton) {
   helpButton.addEventListener("click", (e) => {
     const url = chrome.runtime.getURL("/html/hello.html");
+    chrome.tabs.create({ url });
+    window.close();
+  });
+}
+
+// кнопка ссылка settings
+const settingsButton = document.querySelector(".settings-page");
+
+// если кнопка "settings" считана
+if (settingsButton) {
+  settingsButton.addEventListener("click", (e) => {
+    const url = chrome.runtime.getURL("/html/settings.html");
     chrome.tabs.create({ url });
     window.close();
   });
